@@ -1,6 +1,5 @@
 package com.ivione93;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
@@ -13,9 +12,12 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.jboss.logging.Logger;
 
+import com.ivione93.dto.AtletaDto;
+import com.ivione93.dto.ResultadoDto;
 import com.ivione93.entity.Atleta;
 import com.ivione93.entity.Resultado;
 import com.ivione93.service.TeamService;
@@ -63,8 +65,7 @@ public class TeamResource {
     public Response getAllAthletes() {
     	log.info("Call to getAllAthletes method");
     	
-    	List<Atleta> atletas =  new ArrayList<Atleta>();
-    	atletas = teamService.getAllAthletes();
+    	List<AtletaDto> atletas = teamService.getAllAthletes();
     	
     	return Response.ok(atletas).build();
     }
@@ -86,7 +87,10 @@ public class TeamResource {
     public Response getAthleteResults(@PathParam("licencia") String licencia) {
     	log.infof("Call to getAthleteResults with parameters: { licencia: %s }", licencia);
     	
-    	List<Resultado> resultados = teamService.getAthleteResults(licencia);
+    	List<ResultadoDto> resultados = teamService.getAthleteResults(licencia);
+    	if(resultados == null || resultados.size() < 1) {
+    		return Response.status(Status.NOT_FOUND).build();
+    	}
     	
     	return Response.ok(resultados).build();
     }

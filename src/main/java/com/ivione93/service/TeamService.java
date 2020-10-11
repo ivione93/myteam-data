@@ -1,5 +1,6 @@
 package com.ivione93.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
@@ -10,8 +11,12 @@ import javax.ws.rs.core.Response;
 
 import org.jboss.logging.Logger;
 
+import com.ivione93.dto.AtletaDto;
+import com.ivione93.dto.ResultadoDto;
 import com.ivione93.entity.Atleta;
 import com.ivione93.entity.Resultado;
+import com.ivione93.mapper.AtletaEntityToDtoMapper;
+import com.ivione93.mapper.ResultadoEntityToDtoMapper;
 import com.ivione93.repository.AtletaRepository;
 import com.ivione93.repository.ResultadoRepository;
 
@@ -25,6 +30,12 @@ public class TeamService {
 	
 	@Inject
 	ResultadoRepository resultadoRepository;
+	
+	@Inject
+	AtletaEntityToDtoMapper atletaEntityToDtoMapper;
+	
+	@Inject
+	ResultadoEntityToDtoMapper resultadoEntityToDtoMapper;
 	
 	@Transactional
 	public Response createAthlete(Atleta payload) {
@@ -56,10 +67,14 @@ public class TeamService {
 		return Response.status(Response.Status.CREATED).build();
 	}
 
-	public List<Atleta> getAllAthletes() {
+	public List<AtletaDto> getAllAthletes() {
 		log.info("Call service getAllAthletes");
 		
-		return atletaRepository.getAllAthletes();
+		List<AtletaDto> resultList = new ArrayList<AtletaDto>();
+		List<Atleta> listAtletas = atletaRepository.getAllAthletes();
+		
+		resultList = atletaEntityToDtoMapper.toDto(listAtletas);
+		return resultList;
 	}
 
 	public Atleta getAthleteByLicencia(String licencia) {
@@ -68,21 +83,23 @@ public class TeamService {
 		return atletaRepository.getAthleteByLicencia(licencia);
 	}
 	
-	public List<Resultado> getAthleteResults(String licencia) throws WebApplicationException {
+	public List<ResultadoDto> getAthleteResults(String licencia) throws WebApplicationException {
 		log.infof("Call service getAthleteResults with parameters: { licencia: %s }", licencia);
+		List<ResultadoDto> resultList = new ArrayList<ResultadoDto>();
 		List<Resultado> resultados = null;
 		Atleta atleta = atletaRepository.getAthleteByLicencia(licencia);
 		if(atleta == null ) {
 			log.infof("Not exists an athlete with licencia: %s", licencia);
 		} else {
 			resultados = resultadoRepository.getResultadosByLicencia(licencia);
+			resultList = resultadoEntityToDtoMapper.toDto(resultados);
 			
 			if(resultados == null || resultados.size() < 1) {
 				log.infof("The athlete with licencia { %s } has no results", licencia);
 			}
 		}
 		
-		return resultados;
+		return resultList;
 	}
 	
 }
