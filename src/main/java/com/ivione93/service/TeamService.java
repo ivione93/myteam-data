@@ -77,10 +77,13 @@ public class TeamService {
 		return resultList;
 	}
 
-	public Atleta getAthleteByLicencia(String licencia) {
+	public AtletaDto getAthleteByLicencia(String licencia) {
 		log.infof("Call service getAthleteByLicencia with parameters: { licencia: %s }", licencia);
+	
+		Atleta atleta = atletaRepository.getAthleteByLicencia(licencia);
+		AtletaDto result = atletaEntityToDtoMapper.toDto(atleta);
 		
-		return atletaRepository.getAthleteByLicencia(licencia);
+		return result;
 	}
 	
 	public List<ResultadoDto> getAthleteResults(String licencia) throws WebApplicationException {

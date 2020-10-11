@@ -76,7 +76,7 @@ public class TeamResource {
     public Response getAthleteByLicencia(@PathParam("licencia") String licencia) {
     	log.infof("Call to getAthleteByLicencia with parameters: { licencia: %s }", licencia);
     	
-    	Atleta atleta = teamService.getAthleteByLicencia(licencia);
+    	AtletaDto atleta = teamService.getAthleteByLicencia(licencia);
     	
     	return Response.ok(atleta).build();
     }
