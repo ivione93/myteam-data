@@ -94,4 +94,14 @@ public class TeamResource {
     	
     	return Response.ok(resultados).build();
     }
+    
+    @GET
+    @Path("/start-process-csv")
+    public Response startProcessCSV() {
+    	log.infof("Start process CSV");
+    	
+    	teamService.startProcessCSV();
+    	
+    	return Response.ok().build();
+    }
 }

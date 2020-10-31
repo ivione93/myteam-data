@@ -1,6 +1,10 @@
 package com.ivione93.service;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
@@ -36,6 +40,10 @@ public class TeamService {
 	
 	@Inject
 	ResultadoEntityToDtoMapper resultadoEntityToDtoMapper;
+	
+	Boolean checkAthlete = true;
+	Integer lineNumber = 1;
+	Atleta atleta;
 	
 	@Transactional
 	public Response createAthlete(Atleta payload) {
@@ -105,4 +113,70 @@ public class TeamService {
 		return resultList;
 	}
 	
+	public void startProcessCSV() {
+		log.info("Call service startProcessCSV");
+		
+		BufferedReader reader = null;
+		String csvSplit = ";";
+		
+		try {
+			reader = new BufferedReader(new FileReader("../csv/atletas.csv"));
+			String line = reader.readLine();
+			while (line != null) {
+				List<String> data = Arrays.asList(line.split(csvSplit));
+
+				createAthleteCsv(data);
+				
+				atleta = new Atleta();
+				line = reader.readLine();
+			}
+		} catch (IOException e) {
+			log.error("Error processing file");
+		} finally {
+		    if (reader != null) {
+		        try {
+		        	reader.close();
+		        } catch (IOException e) {
+		            e.printStackTrace();
+		        }
+		    }
+		}
+	}
+	
+	@Transactional
+	public void createAthleteCsv(List<String> data) {
+		atleta = new Atleta();
+		
+		if(!data.get(0).isEmpty()) {
+			String licencia = data.get(0);
+			atleta.setLicencia(licencia);
+			
+			if(!data.get(1).isEmpty()) {
+				String nombre = data.get(1);
+				atleta.setNombre(nombre);
+			}
+			if(!data.get(2).isEmpty()) {
+				String apellidos = data.get(2);
+				atleta.setApellidos(apellidos);
+			}
+			if(!data.get(3).isEmpty()) {
+				String ciudad = data.get(3);
+				atleta.setCiudad(ciudad);
+			}
+			if(!data.get(4).isEmpty()) {
+				String sexo = data.get(4);
+				atleta.setSexo(sexo);
+			}
+			if(!data.get(5).isEmpty()) {
+				String categoria = data.get(5);
+				atleta.setCategoria(categoria);
+			}
+			if(atleta != null) {
+				atletaRepository.persist(atleta);
+				log.info("Alta de: " + atleta.toString());
+			}
+		} else {
+			log.error("Licencia vacía");
+		}
+	}
 }

@@ -2,7 +2,7 @@ CREATE TABLE atletas (
 	licencia varchar(10) NOT NULL UNIQUE,
     nombre varchar(50) NOT NULL,
     apellidos varchar(100) NOT NULL,
-    fecha_nacimiento date NOT NULL,
+    fecha_nacimiento date,
     ciudad varchar(50) NOT NULL,
 	telefono varchar(10),
 	email varchar(100),
