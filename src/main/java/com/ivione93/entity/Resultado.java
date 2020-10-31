@@ -4,6 +4,8 @@ import java.time.Instant;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -12,8 +14,9 @@ import javax.persistence.Table;
 public class Resultado {
 	
 	@Id
-	@Column(name = "resultado_id")
-	private String idResultado;
+	@Column(name = "id_resultado")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long idResultado;
 	
 	@Column(name = "licencia")
 	private String licencia;
@@ -32,11 +35,11 @@ public class Resultado {
 
 	public Resultado() {}
 
-	public String getIdResultado() {
+	public Long getIdResultado() {
 		return idResultado;
 	}
 
-	public void setIdResultado(String idResultado) {
+	public void setIdResultado(Long idResultado) {
 		this.idResultado = idResultado;
 	}
 

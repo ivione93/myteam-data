@@ -12,9 +12,6 @@ import javax.persistence.Table;
 public class Atleta {
 	
 	@Id
-	@Column(name = "atleta_id")
-	private String idAtleta;
-	
 	@Column(name = "licencia")
 	private String licencia;
 	
@@ -43,14 +40,6 @@ public class Atleta {
 	private String categoria;
 	
 	public Atleta() {}
-	
-	public String getIdAtleta() {
-		return idAtleta;
-	}
-
-	public void setIdAtleta(String idAtleta) {
-		this.idAtleta = idAtleta;
-	}
 
 	public String getLicencia() {
 		return licencia;
