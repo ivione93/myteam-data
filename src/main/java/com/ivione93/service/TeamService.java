@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.time.Instant;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -145,6 +146,7 @@ public class TeamService {
 	
 	@Transactional
 	public void createAthleteCsv(List<String> data) {
+		
 		atleta = new Atleta();
 		
 		if(!data.get(0).isEmpty()) {
@@ -164,12 +166,25 @@ public class TeamService {
 				atleta.setCiudad(ciudad);
 			}
 			if(!data.get(4).isEmpty()) {
-				String sexo = data.get(4);
-				atleta.setSexo(sexo);
+				String telefono = data.get(4);
+				atleta.setTelefono(telefono);
 			}
 			if(!data.get(5).isEmpty()) {
-				String categoria = data.get(5);
+				String email = data.get(5);
+				atleta.setEmail(email);
+			}
+			if(!data.get(6).isEmpty()) {
+				String sexo = data.get(6);
+				atleta.setSexo(sexo);
+			}
+			if(!data.get(7).isEmpty()) {
+				String categoria = data.get(7);
 				atleta.setCategoria(categoria);
+			}
+			if(!data.get(8).isEmpty()) {
+				String fecNac = data.get(8);
+				Instant fechaNac = Instant.parse(fecNac);
+				atleta.setFechaNacimiento(fechaNac);
 			}
 			if(atleta != null) {
 				atletaRepository.persist(atleta);
